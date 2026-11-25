@@ -25,15 +25,21 @@ pip install -r requirements.txt
 
 ## MCP Server Registration
 
-Register Pixel Forge as a `stdio` MCP server in your client configuration:
+```powershell
+agy mcp add --env "PYTHONPATH=C:\example\PixelArtMCPserver" pixel-forge -- "C:\example\PixelArtMCPserver\.venv\Scripts\python.exe" -m pixel_forge.server
+```
+
+Or add it directly to `mcp_config.json`:
 
 ```json
 {
   "mcpServers": {
     "pixel-forge": {
-      "command": "C:/Users/natha/Documents/GitHub/PixelArtMCPserver/.venv/Scripts/python.exe",
+      "command": "C:\\example\\PixelArtMCPserver\\.venv\\Scripts\\python.exe",
       "args": ["-m", "pixel_forge.server"],
-      "cwd": "C:/Users/natha/Documents/GitHub/PixelArtMCPserver"
+      "env": {
+        "PYTHONPATH": "C:\\example\\PixelArtMCPserver"
+      }
     }
   }
 }
@@ -41,9 +47,8 @@ Register Pixel Forge as a `stdio` MCP server in your client configuration:
 
 ### Where Output Files Are Written
 
-Because `"cwd"` is pinned to `PixelArtMCPserver`:
-- **Relative `output_dir`** (including the default `"assets/sprites"`) writes inside `PixelArtMCPserver/assets/sprites/`.
-- **Absolute `output_dir`** (e.g., `"C:/path/to/your-game/assets/sprites"`) writes directly into your target project directory. When using the MCP server inside another repository, instruct or let the AI pass that project's absolute sprite directory as `output_dir`.
+- **Relative `output_dir`** (including the default `"assets/sprites"`) resolves relative to the MCP server process's working directory (`cwd`) where the client launches it.
+- **Absolute `output_dir`** (e.g., `"C:/path/to/your-game/assets/sprites"`) always writes directly into that target project directory. Pass an absolute `output_dir` whenever you want to guarantee output lands in a specific repository folder.
 
 ### Exposed MCP Tools
 
